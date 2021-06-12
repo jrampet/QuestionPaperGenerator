@@ -86,10 +86,15 @@ $uinfo=mysqli_fetch_assoc($ses_sql);
         $difficulty=$_POST['difficultySet'];
         $courseName = $_POST['courseSelect']; 
         $id=getTimestamp();
-        $addCourse = "INSERT INTO questions(id,question, difficulty, courseName) VALUES ('$id','$question', '$difficulty', '$courseName')";
-        $res=mysqli_query($link, $addCourse);  
+        
+        
+        
+          $addCourse = "INSERT INTO questions(id,question, difficulty, courseName) VALUES ('$id','$question', '$difficulty', '$courseName')";
+          $res=mysqli_query($link, $addCourse);
+          $successMsg = "Successfully Added Question to: ".$courseName; 
+         
         // $successMsg=$res;
-        $successMsg = "Successfully Added Question to: ".$courseName; 
+        
       }
       else{
         $errorMsg="Fill Course name field";

@@ -83,7 +83,9 @@ $uinfo=mysqli_fetch_assoc($ses_sql);
   //adding course
   if(isset($_POST['submit'])){
     
-    if(!empty($_POST['courseSelect'])){
+    if(!empty($_POST['courseSelect']) && isset($_POST['examdate']) && isset($_POST['examtime'])){
+      $examdate=$_POST['examdate'];
+      $examtime=$_POST['examtime'];
       $courseName=$_POST['courseSelect']; 
       $cn=mysqli_query($link, "select * from courses where courseTitle='$courseName'");
       while($cnr=mysqli_fetch_array($cn)){    
@@ -105,7 +107,14 @@ $uinfo=mysqli_fetch_assoc($ses_sql);
       $s4 = $_POST['sec4']; 
       $s5 = $_POST['sec5']; 
       $s6 = $_POST['sec6']; 
-      
+      $marks=0;
+      $marks+=$s1;
+      $marks+=$s2*2;
+      $marks+=$s3*3;
+      $marks+=$s4*5;
+      $marks+=$s5*10;
+      $marks+=$s6*15;
+
       if($s1>0){
         $sec1qn="";
         $fetchques=mysqli_query($link, "select * from questions where courseName='$courseName' and difficulty=1 ORDER BY RAND() LIMIT $s1");
@@ -127,7 +136,7 @@ $uinfo=mysqli_fetch_assoc($ses_sql);
        
       }
       if($s2>0){
-        $s2++;
+        $s2*=2;
         $sec2qn="";
         $fetchques=mysqli_query($link, "select * from questions where courseName='$courseName' and difficulty=2 ORDER BY RAND() LIMIT $s2");
         $num=mysqli_num_rows($fetchques);
@@ -135,13 +144,21 @@ $uinfo=mysqli_fetch_assoc($ses_sql);
         if($s2>$num){
             $errorMsg=$errorMsg.$s2.' questions are not available at Section 2'.$courseName;
         }else{
-          $s2--;
+          $s2/=2;
           $i=1;
           $mark=2*$s2;
-         $sec2qn='&emsp;&emsp;<b><h3>2 Mark Questions&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;2*'.$s2.'='.$mark.'</h3></b><br>Choose any '.$s2.' Questions from the following<br><br>';
+          $k=1;
+         $sec2qn='&emsp;&emsp;<b><h3>2 Mark Questions&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;2*'.$s2.'='.$mark.'</h3></b><br>Answer all the Questions from the following<br><br>';
           while($ques=mysqli_fetch_array($fetchques)){    
-                 
-            $sec2qn=$sec2qn.$i.'.&ensp;'.$ques['question'].'<br/><br/>';
+            
+            if($i%2){
+              $sec2qn=$sec2qn.$k.'a) .&ensp;'.$ques['question'].'<br/><br/>';
+              $sec2qn.='<center>(or)</center>';           
+            }else{
+              $sec2qn=$sec2qn.$k.'b) .&ensp;'.$ques['question'].'<br/><br/>';
+              $k++;
+            }
+           
             $successMsg=$successMsg.$ques['question'].'<br/><br/>';
             $i++;
           }
@@ -149,7 +166,7 @@ $uinfo=mysqli_fetch_assoc($ses_sql);
        
       }
       if($s3>0){
-        $s3++;
+        $s3*=2;
         $sec3qn="";
         $fetchques=mysqli_query($link, "select * from questions where courseName='$courseName' and difficulty=3 ORDER BY RAND() LIMIT $s3");
         $num=mysqli_num_rows($fetchques);
@@ -157,13 +174,20 @@ $uinfo=mysqli_fetch_assoc($ses_sql);
         if($s3>$num){
             $errorMsg=$errorMsg.$s3.' questions are not available at Section 3'.$courseName;
         }else{
-          $s3--;
+          $s3/=2;
           $i=1;
           $mark=3*$s3;
-          $sec3qn='&emsp;&emsp;<b><h3>3 Mark Questions&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;3*'.$s3.'='.$mark.'</h3></b><br>Choose any '.$s3.' Questions from the following<br><br>';
+          $k=1;
+          $sec3qn='&emsp;&emsp;<b><h3>3 Mark Questions&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;3*'.$s3.'='.$mark.'</h3></b><br>Answer all the Questions from the following<br><br>';
           while($ques=mysqli_fetch_array($fetchques)){    
                  
-            $sec3qn=$sec3qn.$i.'.&ensp;'.$ques['question'].'<br/><br/>';
+            if($i%2){
+              $sec3qn=$sec3qn.$k.'a) .&ensp;'.$ques['question'].'<br/><br/>';
+              $sec3qn.='<center>(or)</center>';           
+            }else{
+              $sec3qn=$sec3qn.$k.'b) .&ensp;'.$ques['question'].'<br/><br/>';
+              $k++;
+            }
             $successMsg=$successMsg.$ques['question'].'<br/><br/>';
             $i++;
           }
@@ -171,7 +195,7 @@ $uinfo=mysqli_fetch_assoc($ses_sql);
        
       }
       if($s4>0){
-        $s4++;
+        $s4*=2;
         $sec4qn="";
        
         $fetchques=mysqli_query($link, "select * from questions where courseName='$courseName' and difficulty=5 ORDER BY RAND() LIMIT $s4");
@@ -180,13 +204,20 @@ $uinfo=mysqli_fetch_assoc($ses_sql);
         if($s4>$num){
             $errorMsg=$errorMsg.$s4.' questions are not available at Section 4'.$courseName;
         }else{
-          $s4--;
+          $s4/=2;
           $i=1;
           $mark=5*$s4;
-          $sec4qn='&emsp;&emsp;<b><h3>5 Mark Questions&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;5*'.$s4.'='.$mark.'</h3></b><br>Choose any '.$s4.' Questions from the following<br><br>';
+          $k=1;
+          $sec4qn='&emsp;&emsp;<b><h3>5 Mark Questions&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;5*'.$s4.'='.$mark.'</h3></b><br>Answer all the Questions from the following<br><br>';
           while($ques=mysqli_fetch_array($fetchques)){    
                  
-            $sec4qn=$sec4qn.$i.'.&ensp;'.$ques['question'].'<br/><br/>';
+            if($i%2){
+              $sec4qn=$sec4qn.$k.'a) .&ensp;'.$ques['question'].'<br/><br/>';
+              $sec4qn.='<center>(or)</center>';           
+            }else{
+              $sec4qn=$sec4qn.$k.'b) .&ensp;'.$ques['question'].'<br/><br/>';
+              $k++;
+            }
             $successMsg=$successMsg.$ques['question'].'<br/><br/>';
             $i++;
           }
@@ -194,7 +225,7 @@ $uinfo=mysqli_fetch_assoc($ses_sql);
        
       }
       if($s5>0){
-        $s5++;
+        $s5*=2;
         $sec5qn="";
         
         $fetchques=mysqli_query($link, "select * from questions where courseName='$courseName' and difficulty=10 ORDER BY RAND() LIMIT $s5");
@@ -203,13 +234,20 @@ $uinfo=mysqli_fetch_assoc($ses_sql);
         if($s5>$num){
             $errorMsg=$errorMsg.$s5.' questions are not available at Section 5'.$courseName;
         }else{
-          $s5--;
+          $s5/=2;
           $i=1;
           $mark=10*$s5;
-        $sec5qn='&emsp;&emsp;<b><h3>10 Mark Questions&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;10*'.$s5.'='.$mark.'</h3></b><br>Choose any '.$s5.' Questions from the following<br><br>';
+          $k=1;
+        $sec5qn='&emsp;&emsp;<b><h3>10 Mark Questions&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;10*'.$s5.'='.$mark.'</h3></b><br>Answer all the Questions from the following<br><br>';
           while($ques=mysqli_fetch_array($fetchques)){    
                  
-            $sec5qn=$sec5qn.$i.'.&ensp;'.$ques['question'].'<br/><br/>';
+            if($i%2){
+              $sec5qn=$sec5qn.$k.'a) .&ensp;'.$ques['question'].'<br/><br/>';
+              $sec5qn.='<center>(or)</center>';           
+            }else{
+              $sec5qn=$sec5qn.$k.'b) .&ensp;'.$ques['question'].'<br/><br/>';
+              $k++;
+            }
             $successMsg=$successMsg.$ques['question'].'<br/><br/>';
 
             $i++;
@@ -218,7 +256,7 @@ $uinfo=mysqli_fetch_assoc($ses_sql);
        
       }
       if($s6>0){
-        $s6++;
+        $s6*=2;
         $sec6qn="";
         
         $fetchques=mysqli_query($link, "select * from questions where courseName='$courseName' and difficulty=15 ORDER BY RAND() LIMIT $s6");
@@ -227,13 +265,20 @@ $uinfo=mysqli_fetch_assoc($ses_sql);
         if($s6>$num){
             $errorMsg=$errorMsg.$s6.' questions are not available at Section 6'.$courseName;
         }else{
-          $s6--;
+          $s6/=2;
           $i=1;
           $mark=15*$s6;
-        $sec6qn='&emsp;&emsp;<b><h3>15 Mark Questions&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;15*'.$s6.'='.$mark.'</h3></b><br>Choose any '.$s6.' Questions from the following<br><br>';
+          $k=1;
+        $sec6qn='&emsp;&emsp;<b><h3>15 Mark Questions&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;15*'.$s6.'='.$mark.'</h3></b><br>Answer all the Questions from the following<br><br>';
           while($ques=mysqli_fetch_array($fetchques)){    
                  
-            $sec6qn=$sec6qn.$i.'.&ensp;'.$ques['question'].'<br/><br/>';
+            if($i%2){
+              $sec6qn=$sec6qn.$k.'a) .&ensp;'.$ques['question'].'<br/><br/>';
+              $sec6qn.='<center>(or)</center>';           
+            }else{
+              $sec6qn=$sec6qn.$k.'b) .&ensp;'.$ques['question'].'<br/><br/>';
+              $k++;
+            }
             $successMsg=$successMsg.$ques['question'].'<br/><br/>';
             $i++;
           }
@@ -241,8 +286,8 @@ $uinfo=mysqli_fetch_assoc($ses_sql);
        
       }
       $id='Qn_'.getTimestamp();
-      $addPaper = "INSERT INTO generatedquestion(ID,Sub,Sec1,Sec2,Sec3,Sec4,Sec5,Sec6) 
-      VALUES ('$id','$course','$sec1qn','$sec2qn','$sec3qn','$sec4qn','$sec5qn','$sec6qn')";
+      $addPaper = "INSERT INTO generatedquestion(ID,Sub,Date,Time,TotalMarks,Sec1,Sec2,Sec3,Sec4,Sec5,Sec6                                                                                                       ) 
+      VALUES ('$id','$course','$examdate','$examtime','$marks','$sec1qn','$sec2qn','$sec3qn','$sec4qn','$sec5qn','$sec6qn')";
             if(mysqli_query($link, $addPaper)){
               printf("Successfully Generated Question Paper<br>Qn Paper ID: ".$id."<br>Please Note down the Question paper Id for download");
             }
@@ -300,6 +345,9 @@ $uinfo=mysqli_fetch_assoc($ses_sql);
 
 
    <div class="form-group">
+   <label>Select Date and Time of the Exam</label>
+   <input type="date" name="examdate">
+   <input type="time" name="examtime">
     <label for="exampleFormControlSelect1">Number of Questions on section 1(1 Marks)</label>
     <select name="sec1" class="form-control" id="exampleFormControlSelect1">
     <option>0</option>

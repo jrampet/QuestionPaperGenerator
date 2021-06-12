@@ -51,7 +51,7 @@ $uinfo=mysqli_fetch_assoc($ses_sql);
   </div>
 </nav>
 
-  <div class="jumbotron jumbotron-fluid">
+<div class="jumbotron jumbotron-fluid" style="background-image:url('header.jpg'); background-repeat: no-repeat;">
   <div class="container">
     <h1 class="display-4">PSG College of Arts & Science</h1>
     <p class="lead">Question Generation System </p>
@@ -148,12 +148,13 @@ if(!empty($printQues)){
      $sh4="";
      $sh5="";
      $sh6="";
-      if($printQues[2]) $sh1=$printQues[2];
-      if($printQues[3]) $sh2=$printQues[3];
-      if($printQues[4]) $sh3=$printQues[4];
-      if($printQues[5]) $sh4=$printQues[5];
-      if($printQues[6]) $sh5=$printQues[6];
-      if($printQues[7]) $sh6=$printQues[7];
+      
+      if($printQues[3]) $sh1=$printQues[5];
+      if($printQues[4]) $sh2=$printQues[6];
+      if($printQues[5]) $sh3=$printQues[7];
+      if($printQues[6]) $sh4=$printQues[8];
+      if($printQues[7]) $sh5=$printQues[9];
+      if($printQues[8]) $sh6=$printQues[10];
 
 
      echo '
@@ -161,14 +162,15 @@ if(!empty($printQues)){
      <div id="questionBox" style="border:1px solid black;"> 
 
      <center> 
+     <img src="header.jpg" width=450">
      <h2>PSG College of Arts & Science</h2>
      <h5>Department of Computer Science & Engineering</h5> 
      
      <p><b> Subject: '.$printQues[1].' </b></p>
-    Full Mark: 40 | 
-     Time: 1 hour 30 minutes
+    Total Marks: '.$printQues[4].' 
       </center>
-      &emsp;&emsp;Date: '.date("d/m/Y").'
+      &emsp;&emsp;Date: '.$printQues[2].'
+      <br>&emsp;&emsp;Time: '.$printQues[3].'
      <br/><br/><hr/><br/><br/><br/>
      
      <font size="3">
